@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Card, { CardBody } from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
 import Input from "../components/ui/Input";
+import { CartContext } from "../contexts/CartContext";
 
 // Mock product data
 const mockProducts = [
@@ -239,6 +240,14 @@ const sortOptions = [
 
 // Product Card Component
 const ProductCard = ({ product }) => {
+  const { addToCart } = useContext(CartContext);
+  
+  const handleAddToCart = () => {
+    if (product.inStock) {
+      addToCart(product);
+    }
+  };
+  
   return (
     <Card className="h-full transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative">
@@ -313,7 +322,12 @@ const ProductCard = ({ product }) => {
               </span>
             )}
           </div>
-          <Button variant="primary" size="sm" disabled={!product.inStock}>
+          <Button 
+            variant="primary" 
+            size="sm" 
+            disabled={!product.inStock}
+            onClick={handleAddToCart}
+          >
             {product.inStock ? "Add to Cart" : "Sold Out"}
           </Button>
         </div>
